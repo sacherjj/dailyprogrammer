@@ -9,7 +9,7 @@ def zero_optimal(num_list):
 
     https://en.wikipedia.org/wiki/3SUM
     """
-    output = []
+    output = set()
     num_list.sort()
     length = len(num_list)
     for i in range(length-2):
@@ -20,12 +20,13 @@ def zero_optimal(num_list):
             b = num_list[start]
             c = num_list[end]
             if a + b + c == 0:
-                output.append((a, b, c))
+                output.add((a, b, c))
                 end -= 1
             elif a + b + c > 0:
                 end -= 1
             else:
                 start += 1
+    return output
 
 
 def zero_sum(num_list):
@@ -52,11 +53,12 @@ def zero_comb(num_list):
 
 inputs = []
 
-with open('../test_data_large.txt', 'r') as f:
+with open('../test_data.txt', 'r') as f:
     for line in f.readlines():
         inputs.append(line.rstrip('\n'))
 
 methods = [('itertools', zero_comb), ('looping', zero_sum), ('quadratic', zero_optimal)]
+methods = [('quadratic', zero_optimal)]
 
 for vals in inputs:
     print('Evaluating {}'.format(vals))
@@ -66,6 +68,6 @@ for vals in inputs:
         start = time.time()
         solution = method_obj(num_list)
         print('Time: {} for {}'.format(time.time()-start, method_name))
- #       print(solution)
+        print(solution)
     print('---')
 
