@@ -50,14 +50,11 @@ def zero_comb(num_list):
     """
     return {tuple(sorted(n)) for n in combinations(num_list, 3) if sum(n) == 0}
 
-inputs = ['9 -6 -5 9 8 3 -4 8 1 7 -4 9 -9 1 9 -9 9 4 -6 -8',
-          '4 5 -1 -2 -7 2 -5 -3 -7 -3 1',
-          '-1 -6 -3 -7 5 -8 2 -8 1',
-          '-5 -1 -4 2 9 -9 -6 -1 -7']
+inputs = []
 
-for i in range(1):
-    inputs.append(' '.join([str(choice([i for i in range(-100, 100)]))
-                            for r in range(1000)]))
+with open('../test_data_large.txt', 'r') as f:
+    for line in f.readlines():
+        inputs.append(line.rstrip('\n'))
 
 methods = [('itertools', zero_comb), ('looping', zero_sum), ('quadratic', zero_optimal)]
 
@@ -69,6 +66,6 @@ for vals in inputs:
         start = time.time()
         solution = method_obj(num_list)
         print('Time: {} for {}'.format(time.time()-start, method_name))
-#       print(solution)
+ #       print(solution)
     print('---')
 
