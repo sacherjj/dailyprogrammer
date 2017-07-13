@@ -61,16 +61,16 @@ impl Circle {
     pub fn in_square(&self) -> bool {
         let r = self.r;
         if r > (BOX_MAX - BOX_MIN)/2f64 {
-            return false;
+            false
         }
         let Point { x, y } = self.center;
         if (x - r) < BOX_MIN || (x + r) > BOX_MAX {
-            return false;
+            false
         }
         if (y - r) < BOX_MIN || (y + r) > BOX_MAX {
-            return false;
+            false
         }
-        return true;
+        true
     }
 
     /// Check if point is inside circle
@@ -78,7 +78,7 @@ impl Circle {
     pub fn point_inside(&self, p: &Point) -> bool {
         let ref c = self.center;
         let d_sq = (p.x - c.x)*(p.x - c.x) + (p.y - c.y)*(p.y - c.y);
-        return d_sq < self.r*self.r;
+        d_sq < self.r*self.r
     }
 }
 
@@ -105,7 +105,7 @@ fn get_test_data(filename: &str) -> Vec<Vec<f64>> {
             point_set.push(Point{x: set[0], y: set[1]})
         }
     }*/
-    return line_sets
+    line_sets
 }
 
 
