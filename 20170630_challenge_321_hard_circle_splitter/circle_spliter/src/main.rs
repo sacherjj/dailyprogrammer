@@ -42,33 +42,33 @@ impl Circle {
                 (k.x*k.x + k.y*k.y) * (j.x*l.y - l.x*j.y) +
                 (l.x*l.x + l.y*l.y) * (k.x*j.y - j.x*k.y);
 
-        let x = - b / (2f64 * a);
-        let y = - c / (2f64 * a);
-        let r = ((b*b + c*c - 4f64*a*d) / (4f64*a*a)).sqrt();
+        let x = - b / (2. * a);
+        let y = - c / (2. * a);
+        let r = ((b*b + c*c - 4.*a*d) / (4.*a*a)).sqrt();
 
         Circle{center: Point{x: x, y: y}, r: r}
     }
 
     /// Returns a Circle based on two points (segment is diameter)
     pub fn from_two_points(j: &Point, k: &Point) -> Circle {
-        let c_x = (j.x - k.x)/2f64 + k.x;
-        let c_y = (j.y - k.y)/2f64 + k.y;
-        let r = ((j.x - k.x)*(j.x - k.x) + (j.y - k.y)*(j.y - k.y)).sqrt() / 2f64;
+        let c_x = (j.x - k.x)/2. + k.x;
+        let c_y = (j.y - k.y)/2. + k.y;
+        let r = ((j.x - k.x)*(j.x - k.x) + (j.y - k.y)*(j.y - k.y)).sqrt() / 2.;
         Circle{center: Point{x: c_x, y: c_y}, r: r}
     }
 
     /// Check if the circle is contained in a square from 0.0 to 1.0 (x and y)
     pub fn in_square(&self) -> bool {
         let r = self.r;
-        if r > (BOX_MAX - BOX_MIN)/2f64 {
-            false
+        if r > (BOX_MAX - BOX_MIN)/2. {
+            return false;
         }
         let Point { x, y } = self.center;
         if (x - r) < BOX_MIN || (x + r) > BOX_MAX {
-            false
+            return false;
         }
         if (y - r) < BOX_MIN || (y + r) > BOX_MAX {
-            false
+            return false;
         }
         true
     }
