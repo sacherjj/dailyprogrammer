@@ -30,6 +30,7 @@ fn zero_sum(num_list: &mut Vec<i32>) -> Vec<(i32, i32, i32)> {
             }
         }
     }
+    // Generates duplicate tuples, sort and dedup to eliminate.
     output.sort();
     output.dedup();
     return output

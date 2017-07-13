@@ -1,0 +1,6 @@
+[package]
+name = "circle_spliter"
+version = "0.1.0"
+authors = ["sacherjj <sacherjj@gmail.com>"]
+
+[dependencies]
