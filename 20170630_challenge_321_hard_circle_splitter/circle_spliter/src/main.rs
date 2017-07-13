@@ -26,9 +26,9 @@ impl Circle {
     /// Returns a Circle that passes through the three points.
     pub fn from_three_points(j: &Point, k: &Point, l: &Point) -> Circle {
         let a = j.x * (k.y - l.y) -
-            j.y * (k.x - l.x) +
-            k.x * l.y -
-            l.x * k.y;
+                j.y * (k.x - l.x) +
+                k.x * l.y -
+                l.x * k.y;
 
         let b = (j.x*j.x + j.y*j.y) * (l.y - k.y) +
                 (k.x*k.x + k.y*k.y) * (j.y - l.y) +
