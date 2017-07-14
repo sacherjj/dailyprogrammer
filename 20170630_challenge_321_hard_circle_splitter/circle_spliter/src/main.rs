@@ -43,7 +43,7 @@ pub fn nearly_equal(a: f32, b: f32) -> bool {
 		// One of a or b is zero (or both are extremely close to it,) use absolute error.
 		diff < (f32::EPSILON * f32::MIN_POSITIVE)
 	} else { // Use relative error.
-		(diff / f32::min(abs_a + abs_b, f32::MAX)) < f32::EPSILON*1.1
+		(diff / f32::min(abs_a + abs_b, f32::MAX)) < f32::EPSILON*2.
 	}
 }
 
@@ -146,70 +146,48 @@ impl Circle {
     }
 }
 
-fn calc_smallest_circle(test_points: &Vec<Point>) -> Option<Circle> {
-    let length = test_points.len();
-    let target: i32 = length as i32 / 2;
-    let mut found = false;
-    let mut smallest = Circle::new(Point{x: 0.5, y:0.5}, 1.0);
-    // Test for solution with 2 points
-    for pta_ind in 0..length - 1 {
-        for ptb_ind in pta_ind + 1..length {
-            let pta = &test_points[pta_ind];
-            let ptb = &test_points[ptb_ind];
-            //            println!("{:?} and {:?}", pta, ptb);
-            let cir = Circle::from_two_points(pta, ptb);
-            //            println!("Trying {:?}", cir);
-            if !cir.in_square() {
-                //                println!("Not in square");
-                continue;
-            }
-            let points_in = cir.points_inside_count(&test_points);
-            //            println!("Points in {}", points_in);
-            if points_in == target {
-                if found {
-                    if cir.r < smallest.r {
-                        smallest.update(&cir);
-                    }
-                } else {
-                    found = true;
-                    smallest.update(&cir);
-                }
+/// If new_cir is smaller than cur_cir, update cur_cir to values of new_cir
+fn set_smallest_circle(cur_cir: &mut Circle, new_cir: &Circle, pts: &Vec<Point>) {
+    let half_len = (pts.len() as i32) / 2;
+    if new_cir.in_square() {
+        let points_in = new_cir.points_inside_count(&pts);
+        if points_in == half_len {
+            if new_cir.r < cur_cir.r {
+                cur_cir.update(&new_cir);
             }
         }
     }
-    for pta_ind in 0..length - 2 {
-        for ptb_ind in pta_ind + 1..length-1 {
-            for ptc_ind in ptb_ind + 1..length {
-                let pta = &test_points[pta_ind];
-                let ptb = &test_points[ptb_ind];
-                let ptc = &test_points[ptc_ind];
-                //            println!("{:?} and {:?}", pta, ptb);
-                let cir = Circle::from_three_points(pta, ptb, ptc);
-                //            println!("Trying {:?}", cir);
-                if !cir.in_square() {
-                    //                println!("Not in square");
-                    continue;
-                }
-                let points_in = cir.points_inside_count(&test_points);
-                //            println!("Points in {}", points_in);
-                if points_in == target {
-                    if found {
-                        if cir.r < smallest.r {
-                            smallest.update(&cir);
-                        }
-                    } else {
-                        found = true;
-                        smallest.update(&cir);
-                    }
-                }
+}
+
+fn calc_smallest_circle(pts: &Vec<Point>) -> Option<Circle> {
+    let length = pts.len();
+    let mut smallest = Circle::new(Point{x: 0.5, y:0.5}, 1.0);
+
+    // Test solution for 3 points
+    for pta_ind in 0 .. length - 2 {
+        for ptb_ind in pta_ind + 1 .. length - 1 {
+            for ptc_ind in ptb_ind + 1 .. length {
+                let cir = Circle::from_three_points(&pts[pta_ind],
+                                                    &pts[ptb_ind],
+                                                    &pts[ptc_ind]);
+                set_smallest_circle(&mut smallest, &cir, &pts);
             }
         }
     }
 
-    if found {
-        Some(smallest)
-    } else {
+    // Test for solution with 2 points
+    for pta_ind in 0..length - 1 {
+        for ptb_ind in pta_ind + 1..length {
+            let cir = Circle::from_two_points(&pts[pta_ind],
+                                              &pts[ptb_ind]);
+            set_smallest_circle(&mut smallest, &cir, &pts);
+        }
+    }
+
+    if nearly_equal(smallest.r, 1.) {
         None
+    } else {
+        Some(smallest)
     }
 }
 
@@ -233,7 +211,7 @@ fn get_test_data(filename: &str) -> Vec<Vec<Point>> {
 
 
 fn main() {
-    let test_sets = get_test_data("../test2.txt");
+    let test_sets = get_test_data("../test1.txt");
     for test_set in test_sets {
         let result = calc_smallest_circle(&test_set);
         match result {
