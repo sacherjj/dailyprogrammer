@@ -42,7 +42,7 @@ pub fn nearly_equal(a: f32, b: f32) -> bool {
 	} else if a == 0.0 || b == 0.0 || diff < f32::MIN_POSITIVE {
 		// One of a or b is zero (or both are extremely close to it,) use absolute error.
 		diff < (f32::EPSILON * f32::MIN_POSITIVE)
-	} else { // Use relative error.
+	} else { // Use relative error.  Had to added *2. on EPSILON, as it didn't match.
 		(diff / f32::min(abs_a + abs_b, f32::MAX)) < f32::EPSILON*2.
 	}
 }
@@ -125,9 +125,7 @@ impl Circle {
         let ref c = self.center;
         let d_sq = (p.x - c.x)*(p.x - c.x) + (p.y - c.y)*(p.y - c.y);
         let r_sq = self.r*self.r;
-//        println!("{} {}", r_sq, d_sq);
         if nearly_equal(d_sq, r_sq) {
-//            println!("Nearly Equal");
             true
         } else {
             d_sq < r_sq
